@@ -1,0 +1,70 @@
+---
+title: "Stat of Indonesia"
+output: html_document
+date: "2023-05-08"
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(scales)
+library(showtext)
+```
+
+# Load Data
+```{r}
+df <- read.csv("middle_class_income.csv")
+```
+
+# Visualization
+```{r}
+size_dash <- 0.5
+
+
+
+df %>%
+  ggplot(aes(x = Percentile, y = Income)) +
+  geom_line(color = "#800000", size = 1.5) +
+  
+  # theme_fivethirtyeight() +
+  
+  labs(x = "Percentile", y = "Pendapatan per Bulan") +
+  scale_y_continuous(breaks = c(2000000, 6000000, 10000000, 20000000, 30000000),
+                     labels = function(x) paste0("Rp ", scales::comma(x/1000000, accuracy = 2), " Juta")) +
+  scale_x_continuous(breaks = c(20, 50, 80, 99)) +
+  
+  theme(plot.title = element_text(size = 16, face = "bold"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12, face = "bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "none") +
+  
+  annotate("text", x = 50, y = 21000000, label = "Siapa yang disebut dengan \"middle class\"?",
+           hjust = 0.5, vjust = 0.5, size = 4, fontface = "bold",
+           family= theme_get()$text[["family"]],) +
+  annotate("text", x = 50, y = 18000000, label = "Jika pendapatan anda > Rp 5,000,000\nmaka anda berada lebih dari 70% orang Indonesia",
+           hjust = 0.5, vjust = 0.5, size = 3, lineheight = 0.8,
+           family= theme_get()$text[["family"]],) +
+  
+  geom_segment(aes(x = 20, xend = 20, y = 0, yend = Income[Percentile == 20][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 50, xend = 50, y = 0, yend = Income[Percentile == 50][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 80, xend = 80, y = 0, yend = Income[Percentile == 80][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 100, xend = 100, y = 0, yend = Income[Percentile == 100][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  
+  geom_segment(aes(x = 0, xend = 20, y = Income[Percentile == 20][1], yend = Income[Percentile == 20][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 0, xend = 50, y = Income[Percentile == 50][1], yend = Income[Percentile == 50][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 0, xend = 80, y = Income[Percentile == 80][1], yend = Income[Percentile == 80][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) +
+  geom_segment(aes(x = 0, xend = 100, y = Income[Percentile == 100][1], yend = Income[Percentile == 100][1]),
+               linetype = "dashed", color = "gray60", size = size_dash) 
+```
+
